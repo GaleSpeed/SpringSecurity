@@ -1,0 +1,30 @@
+<div class="about col-xl-6 col-lg-6 col-md-6 col-sm-6">
+  <div class="col-lg-6 col-sm-6" align="left">
+    <h3>Edit User</h3>
+  </div>
+  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6" align="right">
+    <button class="close-button" (click)="disableEditUI()">X</button>
+  </div>
+</div>
+<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 main" align="center">
+  <div [hidden]="editSubmitted" align="left">
+    <form #editUserGroupForm="ngForm" (ngSubmit)="onEditSubmit()">
+      <div class="form-group">
+        <label class="field" for="userId">Id: </label>
+        <input type="text" class="form-control" id="userId" required readonly [(ngModel)]="userGroup.id" name="id" [value]="userGroup.id">
+      </div>
+      <div class="form-group">
+        <label class="field" for="name">Name: </label>
+        <input type="text" class="form-control" id="name" required [(ngModel)]="userGroup.name" name="name" [value]="userGroup.name">
+      </div>
+       <br />      
+      <div align="center">
+        <input *ngIf="editUserGroupForm.form.valid" type="submit" class="btn btn-success" name="Submit">
+        <input *ngIf="!editUserGroupForm.form.valid" type="submit" class="btn btn-success disabled" name="Submit">
+      </div>
+    </form>
+  </div>
+  <div [hidden]="!editSubmitted">
+    <h4>User Group Deatils updated successfully for UserGroup Id : {{userGroup.id}}</h4>
+  </div>
+</div>

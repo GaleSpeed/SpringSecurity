@@ -1,0 +1,139 @@
+<div>
+    <div>
+      <div class="about">
+        <div class="col-lg-6 col-sm-6" align="left">
+          <h3>Users List</h3>
+        </div>
+        <div class="col-lg-6 col-sm-6" align="right">
+            <!--<button class="action-link" (click)="deleteAll()">Delete All Users</button>&nbsp;&nbsp;-->
+            <button class="action-link" (click)="enableAddUI()">Add User</button>&nbsp;&nbsp;
+            <button class="action-link" (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+    <div class="main" align="left">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>E-Mail</td>
+            <td>Phone</td>
+            <td>Addresses</td>
+            <td>Edit User</td>
+            <td>Delete user</td>
+          </tr>
+        </thead>
+          <tbody>
+          <tr *ngFor="let user of users | async">
+            <td>{{user.id}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.phone}}</td>
+            <td>
+              <ul>
+                <li *ngFor="let address of user.addresses, let i = index">
+                    Address {{i+1}} :- H.No: {{address.hno}}, Area: {{address.area}}, Pincode: {{address.pincode}}
+                </li>
+              </ul>
+            </td>
+            <td>
+              <button name="Edit" class="button is-small action-link" (click)="editUser(user)">Edit</button>
+            </td>
+            <td>
+              <button name="Delete" class="button is-small action-link" (click)="deleteUser(user.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="enableAddUser" class="add-ui" align="center">
+      <div class="about col-xl-6 col-lg-6 col-md-6 col-sm-6">
+        <div class="col-lg-6 col-sm-6" align="left">
+          <h3>Create User</h3>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6" align="right">
+          <button class="close-button" (click)="disableAddUI()">X</button>
+        </div>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 main" align="center">
+        <div [hidden]="submitted" align="left">
+          <form #addUserForm="ngForm" (ngSubmit)="addUserForm.form.valid && onSubmit()">
+            <div class="form-group">
+              <label class="field" for="name">Name: </label>
+              <input type="text" class="form-control" id="name" required minlength="3" [(ngModel)]="user.username" name="name">
+            </div>
+            <div class="form-group">
+              <label class="field" for="email">E-Mail: </label>
+              <input type="text" class="form-control" id="email" required [(ngModel)]="user.email" name="email">
+            </div>
+            <div class="form-group">
+              <label class="field" for="password">Password: </label>
+              <input type="password" class="form-control" id="password" required [(ngModel)]="user.password" name="password" #password="ngModel">
+            </div>
+            <div class="form-group">
+              <label class="field" for="password">Confirm Password: </label>
+              <input type="text" class="form-control" id="cpassword" required [(ngModel)]="user.password" name="cpassword" compare="password">
+            </div>
+            <div class="form-group">
+              <label class="field" for="phone">Phone: </label>
+              <input type="text" class="form-control" id="phone" required minlength="10" [(ngModel)]="user.phone" name="phone">
+            </div>
+            <div class="form-group">
+                <label class="field" for="enable">Enable: </label>
+                <input type="checkbox" class="form-control" style="width: 3%; box-shadow: unset" id="enable"  [(ngModel)]="user.enabled" name="enable">
+            </div>
+            <div *ngIf="user.addresses?.length > 0">
+              <div class="savedAddr" *ngFor="let address of user.addresses; let i = index">
+                  Address {{i+1}} :- H.No: {{address.hno}}, Area: {{address.area}}, Pincode: {{address.pincode}} <span class="action-link" (click)="deleteAddress(i)">Delete Address</span>
+              </div>
+            </div>
+            <br />
+            <span>Address: </span>
+            <div style="margin:10px 0px;">
+              <div class="inner-div">
+                <label class="form-group field" for="hno">H.No: </label>
+                <input type="text" class="form-control" id="hno" required [(ngModel)]="address.hno" name="hno">
+              </div>
+              <div class="inner-div">
+                <label class="form-group field" for="area">Area: </label>
+                <input type="text" class="form-control" id="area" required [(ngModel)]="address.area" name="area">
+              </div>
+              <div class="inner-div">
+                <label class="form-group field" for="pincode">Pincode: </label>
+                <input type="text" class="form-control" id="pincode" required [(ngModel)]="address.pincode" name="pincode">
+              </div>
+              <span *ngIf="address.hno && address.area && address.pincode" class="action-link" (click)="addAddress()">Add Another Address</span>
+              <span *ngIf="!address.hno || !address.area || !address.pincode" class="action-link disabled" (click)="addAddress()">Add Another Address</span>
+            </div>
+            <br>
+            <div style="margin:10px 0px;">
+              <div class="inner-div">
+                <label class="form-group field" for="rolename">Role: </label>
+                <select class="form-control" id="rolename" placeholder="Select" name="profile" required [(ngModel)]="user.role.name" name="rolename">
+                  <option [ngValue]="undefined" disabled  selected> Please select one option </option>
+                  <option value="ROLE_USER">ROLE_USER</option>
+                  <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                </select>
+              </div>
+            </div>
+
+            <div align="center">
+              <input *ngIf="addUserForm.form.valid" type="submit" class="btn btn-success" name="Submit">
+              <input *ngIf="!addUserForm.form.valid" type="submit" class="btn btn-success disabled" name="Submit">
+            </div>
+          </form>
+        </div>
+        
+        <div [hidden]="!submitted">
+          <h4>You submitted successfully!</h4>
+          <button class="btn btn-success" (click)="newUser()">Add</button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="enableEditUser" class="edit-ui" align="center">
+      <app-edit-user [user] = "editUserObject" [groupId] = "groupId"></app-edit-user>
+    </div>
+  
+  </div>
+  

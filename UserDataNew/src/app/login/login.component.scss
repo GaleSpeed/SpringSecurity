@@ -1,0 +1,33 @@
+.main {
+    background-color: rgb(255, 255, 255);
+    border: 2px rgb(166, 166, 166) solid;
+    border-radius: 5px;
+    padding: 2% 2%;   
+    overflow: auto;
+}
+
+.title {
+    background-color: #59bbc2;
+    padding: 5px 0px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.disabled {
+    cursor: not-allowed;
+    background-color: rgb(181, 192, 202);
+}
+
+.ng-valid[required], .ng-valid.required  {
+    border: 2px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+    border: 2px solid #a94442; /* red */
+}
+
+.btn-success {
+    background-color: #59bbc2;
+}
+

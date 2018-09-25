@@ -1,0 +1,74 @@
+<div>
+  <div>
+    <div class="about">
+      <div class="col-lg-6 col-sm-6" align="left">
+        <h3>Users Groups</h3>
+      </div>
+      <div class="col-lg-6 col-sm-6" align="right">
+          <button class="action-link" (click)="enableAddUI()">Add Group</button>&nbsp;&nbsp;&nbsp;
+          <button class="action-link" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+  <div class="main" align="left">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <td>Id</td>
+          <td>Name</td>
+          <td>View Users</td>
+          <td>Edit UserGroup</td>
+          <td>Delete UserGroup</td>
+        </tr>
+      </thead>
+        <tbody>
+        <tr *ngFor="let userGroup of userGroups | async">
+          <td>{{userGroup.id}}</td>
+          <td>{{userGroup.name}}</td>
+          <td>
+            <button name="View" [routerLink]="['../users']" [queryParams]="{ groupId: userGroup.id }" class="button is-small action-link"> + </button>
+          </td>
+          <td>
+            <button name="Edit" class="button is-small action-link" (click)="editUserGroup(userGroup)">Edit</button>
+          </td>
+          <td>
+            <button name="Delete" class="button is-small action-link" (click)="deleteUserGroup(userGroup.id)">Delete</button>
+          </td>          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="enableAddUser" class="add-ui" align="center">
+    <div class="about col-xl-6 col-lg-6 col-md-6 col-sm-6">
+      <div class="col-lg-6 col-sm-6" align="left">
+        <h3>Create Group</h3>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6" align="right">
+        <button class="close-button" (click)="disableAddUI()">X</button>
+      </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 main" align="center">
+      <div [hidden]="submitted" align="left">
+        <form #addUserGroupForm="ngForm" (ngSubmit)="addUserGroupForm.form.valid && onSubmit()">
+          <div class="form-group">
+            <label class="field" for="name">Name: </label>
+            <input type="text" class="form-control" id="name" required [(ngModel)]="userGroup.name" name="name">
+          </div>          
+          <div align="center">
+            <input *ngIf="addUserGroupForm.form.valid" type="submit" class="btn btn-success" name="Submit">
+            <input *ngIf="!addUserGroupForm.form.valid" type="submit" class="btn btn-success disabled" name="Submit">
+          </div>
+        </form>
+      </div>
+      
+      <div [hidden]="!submitted">
+        <h4>You submitted successfully!</h4>
+        <button class="btn btn-success" (click)="newUserGroup()">Add</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="enableEditUserGroup" class="edit-ui" align="center">
+    <app-edit-user-group [userGroup] = "editUserGroupObject"></app-edit-user-group>
+  </div>
+
+</div>
